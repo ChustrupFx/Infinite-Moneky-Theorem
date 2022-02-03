@@ -47,9 +47,29 @@ const targetWord = "unicorn";
 
 const populationLength = 200;
 const population = [];
+var found = false;
 
 for (let i = 0; i <= populationLength; i++) {
   const individual = new Individual();
 
   population.push(individual);
+}
+
+while (!found) {
+  const populationSortedByFitness = population.sort((a, b) => {
+    aFitness = a.fitness;
+    bFitness = b.fitness;
+
+    if (aFitness > bFitness) return 1;
+    if (aFitness < bFitness) return -1;
+    return 0;
+  });
+
+  const tenPercentCount = Math.floor((10 * populationLength) / 100);
+
+  const newPopulation = population.slice(0, tenPercentCount);
+
+  const ninePercentCount = Math.floor((90 * population) / 100);
+
+  break;
 }
