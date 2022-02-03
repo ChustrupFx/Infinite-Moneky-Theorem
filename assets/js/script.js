@@ -1,7 +1,3 @@
-const alphanums =
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const targetWord = "unicorn";
-
 class Individual {
   genes = [];
   fitness;
@@ -45,4 +41,15 @@ class Individual {
   }
 }
 
-const individual = new Individual();
+const alphanums =
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const targetWord = "unicorn";
+
+const populationLength = 200;
+const population = [];
+
+for (let i = 0; i <= populationLength; i++) {
+  const individual = new Individual();
+
+  population.push(individual);
+}
