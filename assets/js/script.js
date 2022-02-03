@@ -4,6 +4,7 @@ const targetWord = "unicorn";
 
 class Individual {
   genes = [];
+  fitness;
 
   constructor(genes = null) {
     if (!genes) {
@@ -11,7 +12,10 @@ class Individual {
     } else {
       this.genes = genes;
     }
+    this.setFitness();
+
     console.log(">> Individual genes: " + this.genes);
+    console.log(">> Individual fitness: " + this.fitness);
   }
 
   generateRandomGenes() {
@@ -26,6 +30,18 @@ class Individual {
     }
 
     return genes;
+  }
+
+  setFitness() {
+    const fitness = this.genes.reduce((accumulator, gene, index) => {
+      //   const targetLetter = targetWord[index];
+      const targetLetter = targetWord[index];
+      if (targetLetter === gene) accumulator -= 1;
+
+      return accumulator;
+    }, this.genes.length);
+
+    this.fitness = fitness;
   }
 }
 
