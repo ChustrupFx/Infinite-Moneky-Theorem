@@ -71,20 +71,27 @@ class Individual {
 
 const alphanums =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'@#$%¨&*() ";
-const targetWord = "I don't give a fuck for what you think";
+const targetWord = "Genetic Algorithm is the coolest thing ever";
 
-const populationLength = 200;
+const populationLength = 350;
 var population = [];
 var found = false;
 var generation = 1;
+var algorithmWord = "";
 
-for (let i = 0; i < populationLength; i++) {
-  const individual = new Individual();
+function setup() {
+  createCanvas(1280, 720);
+  for (let i = 0; i < populationLength; i++) {
+    const individual = new Individual();
 
-  population.push(individual);
+    population.push(individual);
+  }
 }
 
-while (!found) {
+function draw() {
+  background(0);
+  fill(255);
+
   const populationSortedByFitness = population.sort((a, b) => {
     aFitness = a.fitness;
     bFitness = b.fitness;
@@ -94,10 +101,9 @@ while (!found) {
     return 0;
   });
 
-  console.log(population[0].fitness, population[0].genes.join(""), generation);
+  algorithmWord = population[0].genes.join("");
   if (population[0].fitness === 0) {
     found = true;
-    break;
   }
 
   const tenPercentCount = parseInt((10 * populationLength) / 100);
@@ -122,4 +128,28 @@ while (!found) {
   population = newPopulation;
 
   generation++;
+
+  if (found) noLoop();
+
+  displayInfo();
+}
+
+function displayInfo() {
+  textSize(30);
+  text(`Target Word: ${targetWord}`, 0, 30);
+
+  textSize(30);
+  text(`Algorithm Word: ${algorithmWord}`, 0, 70);
+
+  textSize(25);
+  text(`Generation: ${generation}`, 0, 200);
+
+  textSize(25);
+  text(`Population size: ${populationLength}`, 0, 230);
+
+  textSize(25);
+  text(`Elapsed time: ${(millis() / 1000).toFixed(2)}`, 0, 260);
+
+  textSize(25);
+  text(`Finished: ${found ? "Yes" : "No"}`, 0, 290);
 }
