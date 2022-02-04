@@ -10,8 +10,8 @@ class Individual {
     }
     this.setFitness();
 
-    console.log(">> Individual genes: " + this.genes);
-    console.log(">> Individual fitness: " + this.fitness);
+    // console.log(">> Individual genes: " + this.genes);
+    // console.log(">> Individual fitness: " + this.fitness);
   }
 
   generateRandomGenes() {
@@ -39,17 +39,46 @@ class Individual {
 
     this.fitness = fitness;
   }
+
+  getMutatedGene() {
+    const randomIndex = parseInt(Math.random() * alphanums.length);
+
+    return alphanums[randomIndex];
+  }
+
+  mate(individualB) {
+    const genes = this.genes.reduce((accumulator, gene, index) => {
+      const thisIndividualGene = gene;
+      const individualBGene = individualB.genes[index];
+
+      const randomNumber = Math.random();
+      if (randomNumber < 0.45) {
+        accumulator.push(thisIndividualGene);
+      } else if (randomNumber > 0.45 && randomNumber < 0.9) {
+        accumulator.push(individualBGene);
+      } else {
+        accumulator.push(this.getMutatedGene());
+      }
+
+      return accumulator;
+    }, []);
+
+    const newIndividual = new Individual(genes);
+
+    return newIndividual;
+  }
 }
 
 const alphanums =
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const targetWord = "unicorn";
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'@#$%¨&*() ";
+const targetWord = "I don't give a fuck for what you think";
 
 const populationLength = 200;
-const population = [];
+var population = [];
 var found = false;
+var generation = 1;
 
-for (let i = 0; i <= populationLength; i++) {
+for (let i = 0; i < populationLength; i++) {
   const individual = new Individual();
 
   population.push(individual);
@@ -65,11 +94,32 @@ while (!found) {
     return 0;
   });
 
-  const tenPercentCount = Math.floor((10 * populationLength) / 100);
+  console.log(population[0].fitness, population[0].genes.join(""), generation);
+  if (population[0].fitness === 0) {
+    found = true;
+    break;
+  }
 
-  const newPopulation = population.slice(0, tenPercentCount);
+  const tenPercentCount = parseInt((10 * populationLength) / 100);
+  const newPopulation = populationSortedByFitness.slice(0, tenPercentCount);
+  const ninePercentCount = parseInt((90 * populationLength) / 100);
 
-  const ninePercentCount = Math.floor((90 * population) / 100);
+  for (let i = 0; i < ninePercentCount; i++) {
+    const fifthPercentCount = parseInt((50 * populationLength) / 100);
+    const fifthPercentOfPopulation = population.slice(0, fifthPercentCount);
 
-  break;
+    const randomIndexA = parseInt(Math.random() * fifthPercentCount);
+    const randomIndexB = parseInt(Math.random() * fifthPercentCount);
+
+    const parentA = fifthPercentOfPopulation[randomIndexA];
+    const parentB = fifthPercentOfPopulation[randomIndexB];
+
+    const child = parentA.mate(parentB);
+
+    newPopulation.push(child);
+  }
+
+  population = newPopulation;
+
+  generation++;
 }
